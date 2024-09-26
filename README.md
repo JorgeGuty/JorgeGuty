@@ -2,7 +2,8 @@
 
 ## 🚀 About Me
 
-I am a passionate Software Engineer dedicated to tackling complex challenges and driving technological innovation. With over two years of experience as a Full Stack Engineer, I excel in delivering clean, efficient solutions in fast-paced, agile environments. My strong problem-solving abilities, abstract thinking, fast learning, leadership, and teamwork skills have been key to my success. I'm committed to continuous improvement and making a meaningful impact in this dynamic industry.
+I am passionate about tackling complex challenges, driving technological innovation through software engineering, and exploring the science behind it. I am well-prepared to work in fast-paced, agile environments where delivering top-tier software quickly is crucial. Leveraging my strong problem-solving abilities, abstract thinking, fast learning, leadership, and teamwork skills, I have consistently excelled in delivering clean, efficient solutions throughout my more than two years as a Full Stack Engineer. I am committed to continuously improving my skills and striving to become a better engineer every day, leaving a meaningful impact in this dynamic and exciting industry.
+
 
 ## 🛠 Skills
 
