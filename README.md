@@ -12,7 +12,7 @@ I am passionate about tackling complex challenges, driving technological innovat
 - 📱 Mobile: React Native
 - 🖥 Desktop: Electron (React)
 - 🗄️ Databases: PostgreSQL, MySQL, MSSQL, MongoDB, Oracle
-- 🔧 Tools & Technologies: AWS (Amplify, AppRunner, Lambda, API Gateway, CloudFront, S3), Azure (Azure SQL Database), Git, GitHub, GitLab, GitHub Actions (CI/CD), Sentry, MixPanel, SonarQube
+- 🔧 Tools & Technologies: AWS (Amplify, AppRunner, Lambda, API Gateway, CloudFront, S3), Azure (Azure SQL Database), Git, GitHub, GitLab
 - 🧰 Frameworks & Libraries: Node.js, NestJS, Express.js, Flask, Prisma ORM, SQLAlchemy, Pandas
 
 ## 🔭 Current Projects
