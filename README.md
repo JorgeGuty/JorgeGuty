@@ -18,13 +18,7 @@ I am passionate about tackling complex challenges, driving technological innovat
 ## 🔭 Current Projects
 
 - Full Stack Python/Javascript Engineer at Muscle Points
-- Various Next.js projects with AWS integrations
-
-## 🌱 I'm currently learning
-
-- Advanced cloud architecture and serverless computing
-- Machine learning and data science techniques
-- Continuous improvement in full-stack development practices
+- Automated Light Switch project for personal entertainment
 
 ## 📈 GitHub Stats
 
