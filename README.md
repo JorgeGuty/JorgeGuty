@@ -9,7 +9,11 @@
 
 ## 🚀 What I Do
 
-Full Stack Engineer passionate about building innovative solutions and exploring new technologies. I love tackling complex challenges and turning ideas into reality through clean, efficient code.
+Full Stack Engineer passionate about building innovative solutions and exploring new technologies and the science behind them. I love tackling complex challenges and turning ideas into reality through clean, efficient code.
+
+## 🎯 What I Aim
+
+To become a Solutions Architect and Machine Learning expert, combining both fields to design and implement innovative, scalable systems.
 
 ## 🛠 Tech Stack
 
