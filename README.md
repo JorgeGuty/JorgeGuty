@@ -1,68 +1,59 @@
 # 👋 Hi there, I'm Jorge Gutiérrez Cordero
 
-## 🚀 About Me
+<div align="center">
+  
+[![GitHub stats](https://github-readme-stats.vercel.app/api?username=JorgeGuty&show_icons=true&theme=radical)](https://github.com/JorgeGuty)
+[![Top Langs](https://github-readme-stats.vercel.app/api/top-languages/?username=JorgeGuty&layout=compact&theme=radical)](https://github.com/JorgeGuty)
 
-I am passionate about tackling complex challenges, driving technological innovation through software engineering, and exploring the science behind it. I am well-prepared to work in fast-paced, agile environments where delivering top-tier software quickly is crucial. Leveraging my strong problem-solving abilities, abstract thinking, fast learning, leadership, and teamwork skills, I have consistently excelled in delivering clean, efficient solutions throughout my more than two years as a Full Stack Engineer. I am committed to continuously improving my skills and striving to become a better engineer every day, leaving a meaningful impact in this dynamic and exciting industry.
+</div>
 
+## 🚀 What I Do
 
-## 🛠 Skills
+Full Stack Engineer passionate about building innovative solutions and exploring new technologies. I love tackling complex challenges and turning ideas into reality through clean, efficient code.
 
-- 💻 Languages: JavaScript, TypeScript, Python, Java, C#, Go, C, C++
-- 🌐 Web: React, Next.js, Angular, HTML, CSS, SASS, Tailwind CSS
-- 📱 Mobile: React Native
-- 🖥 Desktop: Electron (React)
-- 🗄️ Databases: PostgreSQL, MySQL, MSSQL, MongoDB, Oracle
-- 🔧 Tools & Technologies: AWS (Amplify, AppRunner, Lambda, API Gateway, CloudFront, S3), Azure (Azure SQL Database), Git, GitHub, GitLab
-- 🧰 Frameworks & Libraries: Node.js, NestJS, Express.js, Flask, Prisma ORM, SQLAlchemy, Pandas
+## 🛠 Tech Stack
 
-## 🔭 Current Projects
+<div align="center">
 
-- Full Stack Python/Javascript Engineer at Muscle Points
-- Automated Light Switch project for personal entertainment
+### Languages & Frameworks
+![JavaScript](https://img.shields.io/badge/-JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black)
+![TypeScript](https://img.shields.io/badge/-TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)
+![Python](https://img.shields.io/badge/-Python-3776AB?style=flat-square&logo=python&logoColor=white)
+![React](https://img.shields.io/badge/-React-61DAFB?style=flat-square&logo=react&logoColor=black)
+![Next.js](https://img.shields.io/badge/-Next.js-000000?style=flat-square&logo=next.js&logoColor=white)
+![Node.js](https://img.shields.io/badge/-Node.js-339933?style=flat-square&logo=node.js&logoColor=white)
 
-## 📈 GitHub Stats
+### Cloud & Tools
+![AWS](https://img.shields.io/badge/-AWS-232F3E?style=flat-square&logo=amazon-aws&logoColor=white)
+![Azure](https://img.shields.io/badge/-Azure-0089D6?style=flat-square&logo=microsoft-azure&logoColor=white)
+![Docker](https://img.shields.io/badge/-Docker-2496ED?style=flat-square&logo=docker&logoColor=white)
 
-![Your GitHub stats](https://github-readme-stats.vercel.app/api?username=JorgeGuty&show_icons=true&theme=radical)
+</div>
 
-## 💼 Work Experience
+## 🌱 Currently Learning
 
-- **Full Stack Python/Javascript Engineer** at Muscle Points (October 2023 - Present)
-- **Full Stack Software Engineer** at Basehive (August 2022 - October 2023)
-- **Investigation Project Assistant** at Instituto Tecnológico de Costa Rica (ITCR) (August 2021 - May 2022)
-- **Software Development Intern** at COES Análisis de Medios (January 2021 - April 2021)
+- Advanced AWS Architecture
+- Machine Learning with Python
+- IoT Development
 
-## 🎓 Education
+## 📫 Let's Connect!
 
-- **Software Engineering Bachelor's Degree** from Instituto Tecnológico de Costa Rica (ITCR) (September 2023)
+<div align="center">
 
-## 📫 How to reach me
+[![LinkedIn](https://img.shields.io/badge/-LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/jorge-gutiérrez-cordero-379989200/)
+[![GitHub](https://img.shields.io/badge/-GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/JorgeGuty)
+[![Email](https://img.shields.io/badge/-Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:jorgegutico999@gmail.com)
 
-- Phone: (+506) 7056-0910
-- Email: jorgegutico999@gmail.com
-- [LinkedIn](https://www.linkedin.com/in/jorge-guti%C3%A9rrez-cordero-379989200/)
-- [GitHub](https://github.com/JorgeGuty)
+</div>
 
-## 💪 Key Skills
+## 🤝 Open to Collaborations
 
-- English Level: C1
-- Cloud Platforms: AWS, Azure
-- Version Control: Git, GitHub, GitLab
-- Databases: PostgreSQL, MySQL, MSSQL, MongoDB
-- ORMs: Prisma ORM, SQLAlchemy
-
-## 🧠 Soft Skills
-
-- Communication
-- Teamwork
-- Leadership
-- Problem Solving
-- Analytical skills
-- Abstract thinking
-
-## 🤝 Open to collaborations
-
-I'm always interested in working on exciting projects that push the boundaries of technology. If you have an idea or want to collaborate, feel free to reach out!
+I'm always excited to work on innovative projects that push technological boundaries. If you have an interesting idea or want to collaborate, let's connect!
 
 ---
 
-⭐️ From [JorgeGuty](https://github.com/JorgeGuty)
+<div align="center">
+  
+![Profile Views](https://komarev.com/ghpvc/?username=JorgeGuty&color=blueviolet)
+
+</div>
