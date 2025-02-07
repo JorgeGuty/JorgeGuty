@@ -49,7 +49,7 @@ Full Stack Engineer passionate about building innovative solutions and exploring
 
 ## 🤝 Open to Collaborations
 
-I'm always excited to work on innovative projects that push technological boundaries. If you have an interesting idea or want to collaborate, let's connect!
+I'm always excited to work on innovative projects that push technological boundaries. If you have an interesting idea or want to collaborate, let's connect! For freelance work, I'm available for a couple hours a day.
 
 ---
 
