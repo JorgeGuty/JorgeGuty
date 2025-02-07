@@ -32,9 +32,10 @@ Full Stack Engineer passionate about building innovative solutions and exploring
 
 ## 🌱 Currently Learning
 
-- Advanced AWS Architecture
-- Machine Learning with Python
-- IoT Development
+- Agentic AI
+- Software Architecture
+- Cloud Computing
+- IoT Principles
 
 ## 📫 Let's Connect!
 
@@ -51,9 +52,5 @@ Full Stack Engineer passionate about building innovative solutions and exploring
 I'm always excited to work on innovative projects that push technological boundaries. If you have an interesting idea or want to collaborate, let's connect!
 
 ---
-
-<div align="center">
-  
-![Profile Views](https://komarev.com/ghpvc/?username=JorgeGuty&color=blueviolet)
 
 </div>
