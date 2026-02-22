@@ -5,7 +5,7 @@ Sofware Engineer passionate about creating high quality software projects throug
 
 ## 🎯 What I Aim
 
-To become a world-class Solutions Architect.
+To become a world-class Solutions Architect (or it's equivalent in the future)
 
 ## 🛠 Tech Stack
 
