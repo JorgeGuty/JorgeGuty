@@ -1,7 +1,7 @@
 # Jorge Gutiérrez Cordero
 ## 🚀 What I Do
 
-Sofware Engineer passionate about creating high quality software projects through creativity, science, cool architectures and AI. 
+Sofware Engineer passionate about creating high quality software projects through creativity, science, architecture and AI. 
 
 ## 🎯 What I Aim
 
