@@ -7,10 +7,6 @@ Sofware Engineer passionate about creating high quality software projects throug
 
 To become a world-class Solutions Architect (or it's equivalent in the future)
 
-## 🛠 Tech Stack
-
-Anything I discover exists that I can learn and develop with AI. 
-
 ## 📫 Let's Connect!
 
 <div align="center">
