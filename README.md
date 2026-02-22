@@ -1,12 +1,4 @@
-# 👋 Hi there, I'm Jorge Gutiérrez Cordero
-
-<div align="center">
-  
-[![GitHub stats](https://github-readme-stats.vercel.app/api?username=JorgeGuty&show_icons=true&theme=radical)](https://github.com/JorgeGuty)
-[![Top Langs](https://github-readme-stats.vercel.app/api/top-languages/?username=JorgeGuty&layout=compact&theme=radical)](https://github.com/JorgeGuty)
-
-</div>
-
+# Jorge Gutiérrez Cordero
 ## 🚀 What I Do
 
 Full Stack Engineer passionate about building innovative solutions and exploring new technologies and the science behind them. I love tackling complex challenges and turning ideas into reality through clean, efficient code.
