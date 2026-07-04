@@ -48,6 +48,8 @@
   const btnLocate = document.getElementById("btn-locate");
   const btnFollow = document.getElementById("btn-follow");
   const btnDemo = document.getElementById("btn-demo");
+  const btnImport = document.getElementById("btn-import");
+  const fileInput = document.getElementById("file-input");
   const btnReset = document.getElementById("btn-reset");
   const toastEl = document.getElementById("toast");
 
@@ -235,6 +237,166 @@
     saveSoon();
   }
 
+  // --- Import (GPX tracks / Google Timeline JSON) ---------------------------
+  // Lets background-capable trackers (Strava, GPS loggers, Google Timeline)
+  // do the recording; their exports reveal the fog here afterwards.
+
+  function validCoord(lat, lng) {
+    return (
+      Number.isFinite(lat) && Number.isFinite(lng) &&
+      Math.abs(lat) <= 90 && Math.abs(lng) <= 180 &&
+      (lat !== 0 || lng !== 0)
+    );
+  }
+
+  // Returns ordered segments (arrays of [lat,lng]); distance is only summed
+  // within a segment, since points there are a continuous recorded path.
+  function parseGpx(xml) {
+    const doc = new DOMParser().parseFromString(xml, "application/xml");
+    if (doc.querySelector("parsererror")) throw new Error("invalid GPX");
+    const readPt = (el) => {
+      const lat = parseFloat(el.getAttribute("lat"));
+      const lng = parseFloat(el.getAttribute("lon"));
+      return validCoord(lat, lng) ? [lat, lng] : null;
+    };
+    const segs = [];
+    doc.querySelectorAll("trkseg, rte").forEach((seg) => {
+      const pts = [...seg.querySelectorAll("trkpt, rtept")]
+        .map(readPt)
+        .filter(Boolean);
+      if (pts.length) segs.push(pts);
+    });
+    // standalone waypoints: single-point segments (no distance credit)
+    doc.querySelectorAll(":scope > wpt, gpx > wpt").forEach((el) => {
+      const p = readPt(el);
+      if (p) segs.push([p]);
+    });
+    return segs;
+  }
+
+  // Tolerant of every Google Takeout / Timeline flavor: walks the whole JSON
+  // tree collecting latitudeE7/longitudeE7 pairs and "lat, lng" strings
+  // (timelinePath points, "geo:lat,lng" placeLocations, etc).
+  function parseTimelineJson(text) {
+    const data = JSON.parse(text);
+    const pts = [];
+    const coordRe = /(-?\d{1,3}(?:\.\d+)?)°?\s*,\s*(-?\d{1,3}(?:\.\d+)?)°?/;
+    const walk = (node) => {
+      if (!node || typeof node !== "object") return;
+      if (Array.isArray(node)) {
+        for (const item of node) walk(item);
+        return;
+      }
+      const latE7 = node.latitudeE7 ?? node.latE7;
+      const lngE7 = node.longitudeE7 ?? node.lngE7;
+      if (typeof latE7 === "number" && typeof lngE7 === "number") {
+        const lat = latE7 / 1e7, lng = lngE7 / 1e7;
+        if (validCoord(lat, lng)) pts.push([lat, lng]);
+      }
+      for (const v of Object.values(node)) {
+        if (typeof v === "string") {
+          const m = v.match(coordRe);
+          if (m && validCoord(+m[1], +m[2])) pts.push([+m[1], +m[2]]);
+        } else {
+          walk(v);
+        }
+      }
+    };
+    walk(data);
+    return pts;
+  }
+
+  async function importFiles(files) {
+    if (!files || !files.length) return;
+    toast("Importing…");
+    const before = explored.length;
+    let parsedPts = 0;
+    let importedDistM = 0;
+    const failed = [];
+    for (const file of files) {
+      try {
+        const text = await file.text();
+        const isGpx = /\.gpx$/i.test(file.name) || text.trimStart().startsWith("<");
+        if (isGpx) {
+          for (const seg of parseGpx(text)) {
+            parsedPts += seg.length;
+            for (let i = 0; i < seg.length; i++) {
+              if (i > 0) importedDistM += haversineM(seg[i - 1], seg[i]);
+              revealAt(seg[i]);
+            }
+          }
+        } else {
+          const pts = parseTimelineJson(text);
+          parsedPts += pts.length;
+          for (const p of pts) revealAt(p);
+        }
+      } catch {
+        failed.push(file.name);
+      }
+    }
+    const added = explored.length - before;
+    if (added > 0) {
+      distanceM += importedDistM;
+      saveSoon();
+      updateStats();
+      map.fitBounds(L.latLngBounds(explored.slice(before)).pad(0.2), {
+        maxZoom: 15,
+      });
+      const km = importedDistM / 1000;
+      toast(
+        `Uncovered ${added} new zones` +
+          (km >= 0.1 ? ` (+${km.toFixed(1)} km traveled)` : "")
+      );
+    } else if (failed.length === files.length) {
+      toast("Couldn't read those files — expected GPX or Google Timeline JSON");
+    } else if (parsedPts > 0) {
+      toast("No new zones — you had already explored all of that");
+    } else {
+      toast("No coordinates found in those files");
+    }
+    if (failed.length && failed.length < files.length) {
+      console.warn("Import failed for:", failed);
+    }
+  }
+
+  btnImport.addEventListener("click", () => fileInput.click());
+  fileInput.addEventListener("change", () => {
+    importFiles([...fileInput.files]);
+    fileInput.value = "";
+  });
+
+  // Drag & drop anywhere on the page
+  window.addEventListener("dragover", (e) => e.preventDefault());
+  window.addEventListener("drop", (e) => {
+    e.preventDefault();
+    importFiles([...e.dataTransfer.files]);
+  });
+
+  // --- Wake lock -------------------------------------------------------------
+  // Keep the screen on while live tracking, so walks aren't cut short by the
+  // phone going to sleep (browsers can't read GPS from the background).
+  let wakeLock = null;
+
+  async function acquireWakeLock() {
+    try {
+      wakeLock = await navigator.wakeLock?.request("screen");
+    } catch {
+      wakeLock = null; // low battery or unsupported — tracking still works
+    }
+  }
+
+  function releaseWakeLock() {
+    wakeLock?.release().catch(() => {});
+    wakeLock = null;
+  }
+
+  document.addEventListener("visibilitychange", () => {
+    // the lock is auto-released when the tab is hidden; re-grab it on return
+    if (watchId != null && document.visibilityState === "visible") {
+      acquireWakeLock();
+    }
+  });
+
   // --- GPS -----------------------------------------------------------------
   function startGps() {
     if (!("geolocation" in navigator)) {
@@ -272,6 +434,7 @@
     );
     btnLocate.textContent = "⏸ STOP";
     btnLocate.classList.add("active");
+    acquireWakeLock();
     toast("Tracking started — go explore!");
   }
 
@@ -285,6 +448,7 @@
 
   function stopGpsUi() {
     watchId = null;
+    releaseWakeLock();
     statGps.textContent = "OFF";
     btnLocate.textContent = "▶ START";
     btnLocate.classList.remove("active");

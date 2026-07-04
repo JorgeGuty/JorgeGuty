@@ -12,7 +12,15 @@ and it only gets revealed as you physically go there.
 - **🎯 FOLLOW** keeps the camera locked on you (dragging the map turns it off).
 - **🕹 DEMO** lets you try it without GPS: click anywhere to travel there,
   or move with the arrow keys / WASD.
+- **📂 IMPORT** reveals fog from files recorded by apps that *can* track in
+  the background (browsers can't once the tab is closed): GPX tracks from
+  Strava / any GPS logger, or Google Timeline JSON exports (both the old
+  Takeout `Records.json` and the new on-device `Timeline.json` formats).
+  You can also drag & drop files onto the map. GPX tracks count toward your
+  traveled distance.
 - **🗑 RESET FOG** covers the world again.
+- While live tracking is on, the app requests a screen wake lock so your
+  phone doesn't sleep mid-walk.
 
 ## Running it
 
