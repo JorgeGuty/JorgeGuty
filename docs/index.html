@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Decoration Advisor</title>
+<style>
+  :root {
+    --bg: #faf7f2;
+    --card: #ffffff;
+    --ink: #2b2723;
+    --muted: #7a7268;
+    --accent: #7d9c76;
+    --accent-dark: #64815e;
+    --border: #e6e0d6;
+    --radius: 14px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.55;
+  }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+  header { text-align: center; margin-bottom: 2rem; }
+  header h1 { font-size: 2rem; font-weight: 700; letter-spacing: -0.02em; }
+  header h1 span { color: var(--accent-dark); }
+  header p { color: var(--muted); margin-top: 0.4rem; }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  details.provider { margin-bottom: 1.5rem; }
+  details.provider summary {
+    cursor: pointer; font-weight: 600; color: var(--accent-dark);
+    padding: 0.9rem 1.25rem; background: var(--card);
+    border: 1px solid var(--border); border-radius: var(--radius);
+    list-style: none;
+  }
+  details.provider summary::before { content: "⚙️ "; }
+  details.provider[open] summary { border-radius: var(--radius) var(--radius) 0 0; }
+  details.provider .provider-body {
+    border: 1px solid var(--border); border-top: none;
+    border-radius: 0 0 var(--radius) var(--radius);
+    background: var(--card); padding: 1.25rem;
+  }
+  .provider-body .hint { font-size: 0.85rem; color: var(--muted); margin-top: 0.5rem; }
+  .provider-body .hint a { color: var(--accent-dark); }
+  .provider-body input[type="text"], .provider-body input[type="password"] {
+    width: 100%; padding: 0.6rem 0.7rem;
+    border: 1px solid var(--border); border-radius: 8px;
+    font: inherit; background: #fff; color: var(--ink);
+  }
+
+  .dropzone {
+    border: 2px dashed var(--border);
+    border-radius: var(--radius);
+    padding: 2.5rem 1rem;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    color: var(--muted);
+  }
+  .dropzone.dragover, .dropzone:hover { border-color: var(--accent); background: #f4f7f2; }
+  .dropzone strong { color: var(--ink); }
+  .dropzone img {
+    max-width: 100%; max-height: 320px;
+    border-radius: 10px; display: block; margin: 0 auto;
+  }
+
+  .fields {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem; margin-top: 1.25rem;
+  }
+  label { font-size: 0.85rem; font-weight: 600; color: var(--muted); display: block; margin-bottom: 0.3rem; }
+  select, textarea {
+    width: 100%; padding: 0.6rem 0.7rem;
+    border: 1px solid var(--border); border-radius: 8px;
+    font: inherit; background: #fff; color: var(--ink);
+  }
+  textarea { resize: vertical; min-height: 60px; }
+  .notes { grid-column: 1 / -1; }
+
+  button.primary {
+    margin-top: 1.25rem; width: 100%;
+    padding: 0.9rem; font-size: 1.05rem; font-weight: 600;
+    color: #fff; background: var(--accent-dark);
+    border: none; border-radius: 10px; cursor: pointer;
+    transition: background 0.2s;
+  }
+  button.primary:hover:not(:disabled) { background: var(--accent); }
+  button.primary:disabled { opacity: 0.55; cursor: not-allowed; }
+
+  .status { text-align: center; color: var(--muted); margin-top: 1rem; display: none; }
+  .status.error { color: #b0473d; }
+  .spinner {
+    display: inline-block; width: 18px; height: 18px;
+    border: 3px solid var(--border); border-top-color: var(--accent-dark);
+    border-radius: 50%; animation: spin 0.8s linear infinite;
+    vertical-align: -4px; margin-right: 8px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  #results { display: none; }
+  #results h2 { font-size: 1.15rem; margin-bottom: 0.75rem; color: var(--accent-dark); }
+  .summary-style { font-size: 1.02rem; }
+  .summary-style .style-tag {
+    display: inline-block; margin-top: 0.75rem; padding: 0.3rem 0.8rem;
+    background: #eef3ec; color: var(--accent-dark);
+    border-radius: 999px; font-weight: 600; font-size: 0.9rem;
+  }
+
+  .palette { display: flex; flex-wrap: wrap; gap: 0.9rem; }
+  .swatch { flex: 1 1 140px; max-width: 200px; }
+  .swatch .chip {
+    height: 64px; border-radius: 10px; border: 1px solid var(--border);
+  }
+  .swatch .name { font-weight: 600; margin-top: 0.4rem; font-size: 0.92rem; }
+  .swatch .hex { color: var(--muted); font-size: 0.8rem; font-family: monospace; }
+  .swatch .usage { color: var(--muted); font-size: 0.85rem; }
+
+  .furniture-grid {
+    display: grid; gap: 0.9rem;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  }
+  .furniture-item {
+    border: 1px solid var(--border); border-radius: 10px; padding: 0.9rem 1rem;
+    background: #fdfcfa;
+  }
+  .furniture-item h3 { font-size: 0.98rem; margin-bottom: 0.25rem; }
+  .furniture-item p { font-size: 0.88rem; color: var(--muted); }
+  .furniture-item .placement { margin-top: 0.35rem; font-style: italic; }
+
+  ul.plain { list-style: none; }
+  ul.plain li {
+    padding: 0.45rem 0 0.45rem 1.6rem; position: relative;
+  }
+  ul.plain li::before {
+    content: "✦"; color: var(--accent); position: absolute; left: 0.2rem;
+  }
+  .mock-note {
+    background: #fff6e0; border: 1px solid #eadfba; color: #7a6a33;
+    border-radius: 8px; padding: 0.6rem 0.9rem; font-size: 0.85rem;
+    margin-bottom: 1rem;
+  }
+  footer { text-align: center; color: var(--muted); font-size: 0.85rem; margin-top: 2rem; }
+  footer a { color: var(--accent-dark); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>🛋️ Decoration <span>Advisor</span></h1>
+    <p>Upload a photo of your empty space and get AI advice on colors, furniture, lighting and more — powered by open models.</p>
+  </header>
+
+  <details class="provider">
+    <summary>AI provider settings</summary>
+    <div class="provider-body">
+      <div class="fields" style="margin-top:0">
+        <div>
+          <label for="provider">Provider</label>
+          <select id="provider">
+            <option value="huggingface">Hugging Face (hosted open model)</option>
+            <option value="ollama">Ollama (local open model)</option>
+            <option value="mock">Demo mode (no AI)</option>
+          </select>
+        </div>
+        <div id="hf-fields">
+          <label for="hf_token">Hugging Face token</label>
+          <input type="password" id="hf_token" placeholder="hf_...">
+          <p class="hint">
+            Free token from <a href="https://huggingface.co/settings/tokens" target="_blank" rel="noopener">huggingface.co/settings/tokens</a>
+            (needs the “Inference” permission). Stored only in your browser and
+            sent only to Hugging Face. Model:
+            <code>Qwen/Qwen2.5-VL-7B-Instruct</code>.
+          </p>
+        </div>
+        <div id="ollama-fields" hidden>
+          <label for="ollama_url">Ollama URL</label>
+          <input type="text" id="ollama_url" value="http://localhost:11434">
+          <label for="ollama_model" style="margin-top:0.6rem">Model</label>
+          <input type="text" id="ollama_model" value="qwen2.5vl">
+          <p class="hint">
+            Run Ollama on your machine with this page's origin allowed:<br>
+            <code>OLLAMA_ORIGINS="https://*.github.io" ollama serve</code>,
+            then <code>ollama pull qwen2.5vl</code>. Works in Chrome/Edge
+            (they allow HTTPS pages to reach localhost).
+          </p>
+        </div>
+      </div>
+    </div>
+  </details>
+
+  <div class="card">
+    <div class="dropzone" id="dropzone">
+      <div id="dz-placeholder">
+        📷 <strong>Drop a photo of your empty space here</strong><br>
+        or click to browse (JPEG / PNG / WebP, max 10&nbsp;MB)
+      </div>
+      <img id="preview" alt="Room preview" hidden>
+    </div>
+    <input type="file" id="file-input" accept="image/jpeg,image/png,image/webp" hidden>
+
+    <div class="fields">
+      <div>
+        <label for="room_type">Room use</label>
+        <select id="room_type">
+          <option value="">Let the AI decide</option>
+          <option>Living room</option>
+          <option>Bedroom</option>
+          <option>Home office</option>
+          <option>Dining room</option>
+          <option>Kitchen</option>
+          <option>Kids room</option>
+          <option>Studio / multipurpose</option>
+        </select>
+      </div>
+      <div>
+        <label for="style">Preferred style</label>
+        <select id="style">
+          <option value="">No preference</option>
+          <option>Minimalist</option>
+          <option>Scandinavian</option>
+          <option>Japandi</option>
+          <option>Industrial</option>
+          <option>Bohemian</option>
+          <option>Mid-century modern</option>
+          <option>Rustic</option>
+          <option>Classic / traditional</option>
+        </select>
+      </div>
+      <div>
+        <label for="budget">Budget</label>
+        <select id="budget">
+          <option value="">Any</option>
+          <option>Low</option>
+          <option>Medium</option>
+          <option>High</option>
+        </select>
+      </div>
+      <div>
+        <label for="language">Answer language</label>
+        <select id="language">
+          <option value="English">English</option>
+          <option value="Español">Español</option>
+        </select>
+      </div>
+      <div class="notes">
+        <label for="notes">Anything else? (pets, existing pieces, dislikes…)</label>
+        <textarea id="notes" maxlength="2000" placeholder="e.g. I have a cat, I want lots of plants, I dislike bright red"></textarea>
+      </div>
+    </div>
+
+    <button class="primary" id="go" disabled>Get decoration advice</button>
+    <div class="status" id="status"></div>
+  </div>
+
+  <div id="results">
+    <div id="mock-note" class="mock-note" hidden>
+      ⚠️ Demo mode: this is sample advice. Pick Hugging Face or Ollama in the AI provider settings to get real analysis of your photo.
+    </div>
+    <div class="card summary-style">
+      <h2 id="h-summary">Design concept</h2>
+      <p id="summary"></p>
+      <span class="style-tag" id="style-tag"></span>
+    </div>
+    <div class="card">
+      <h2 id="h-palette">Color palette</h2>
+      <div class="palette" id="palette"></div>
+    </div>
+    <div class="card">
+      <h2 id="h-furniture">Furniture</h2>
+      <div class="furniture-grid" id="furniture"></div>
+    </div>
+    <div class="card">
+      <h2 id="h-lighting">Lighting</h2>
+      <ul class="plain" id="lighting"></ul>
+    </div>
+    <div class="card">
+      <h2 id="h-decor">Decor</h2>
+      <ul class="plain" id="decor"></ul>
+    </div>
+    <div class="card">
+      <h2 id="h-layout">Layout tips</h2>
+      <ul class="plain" id="layout_tips"></ul>
+    </div>
+  </div>
+
+  <footer>
+    Runs entirely in your browser on open models —
+    <a href="https://github.com/JorgeGuty/JorgeGuty" target="_blank" rel="noopener">source on GitHub</a>.
+  </footer>
+</div>
+
+<script>
+"use strict";
+
+const HF_URL = "https://router.huggingface.co/v1/chat/completions";
+const HF_MODEL = "Qwen/Qwen2.5-VL-7B-Instruct";
+
+const SYSTEM_PROMPT = `You are an expert interior designer. The user sends a photo of an empty (or
+nearly empty) space plus optional preferences. Study the photo carefully:
+its dimensions, natural light, windows, floor and wall materials, and
+architectural features.
+
+Respond ONLY with a single JSON object, no markdown fences, no commentary,
+matching exactly this schema:
+
+{
+  "summary": "2-3 sentence assessment of the space and overall design concept",
+  "style": "the recommended decoration style and why it suits this space",
+  "color_palette": [
+    {"name": "color name", "hex": "#RRGGBB", "usage": "where/how to use it"}
+  ],
+  "furniture": [
+    {"item": "furniture piece", "description": "materials, size, style",
+     "placement": "where to put it in this room"}
+  ],
+  "lighting": ["lighting recommendation", "..."],
+  "decor": ["decorative element recommendation", "..."],
+  "layout_tips": ["tip about arranging the space", "..."]
+}
+
+Give 4-6 colors, 4-7 furniture pieces, and 3-5 items in each list. Ground
+every recommendation in what you actually see in the photo. Write the values
+in {language}.`;
+
+const dropzone = document.getElementById("dropzone");
+const fileInput = document.getElementById("file-input");
+const preview = document.getElementById("preview");
+const placeholder = document.getElementById("dz-placeholder");
+const goBtn = document.getElementById("go");
+const statusEl = document.getElementById("status");
+const results = document.getElementById("results");
+let selectedFile = null;
+
+const HEADINGS = {
+  English: { summary: "Design concept", palette: "Color palette",
+             furniture: "Furniture", lighting: "Lighting",
+             decor: "Decor", layout: "Layout tips",
+             button: "Get decoration advice", loading: "Analyzing your space…" },
+  "Español": { summary: "Concepto de diseño", palette: "Paleta de colores",
+             furniture: "Muebles", lighting: "Iluminación",
+             decor: "Decoración", layout: "Consejos de distribución",
+             button: "Obtener asesoría de decoración",
+             loading: "Analizando tu espacio…" },
+};
+
+function lang() { return document.getElementById("language").value; }
+document.getElementById("language").addEventListener("change", () => {
+  goBtn.textContent = HEADINGS[lang()].button;
+});
+
+// ---- provider settings (persisted in localStorage) ----
+const providerSel = document.getElementById("provider");
+const hfToken = document.getElementById("hf_token");
+const ollamaUrl = document.getElementById("ollama_url");
+const ollamaModel = document.getElementById("ollama_model");
+
+function loadSettings() {
+  providerSel.value = localStorage.getItem("da_provider") || "huggingface";
+  hfToken.value = localStorage.getItem("da_hf_token") || "";
+  ollamaUrl.value = localStorage.getItem("da_ollama_url") || "http://localhost:11434";
+  ollamaModel.value = localStorage.getItem("da_ollama_model") || "qwen2.5vl";
+  toggleProviderFields();
+}
+function saveSettings() {
+  localStorage.setItem("da_provider", providerSel.value);
+  localStorage.setItem("da_hf_token", hfToken.value.trim());
+  localStorage.setItem("da_ollama_url", ollamaUrl.value.trim());
+  localStorage.setItem("da_ollama_model", ollamaModel.value.trim());
+}
+function toggleProviderFields() {
+  document.getElementById("hf-fields").hidden = providerSel.value !== "huggingface";
+  document.getElementById("ollama-fields").hidden = providerSel.value !== "ollama";
+}
+providerSel.addEventListener("change", () => { toggleProviderFields(); saveSettings(); });
+for (const el of [hfToken, ollamaUrl, ollamaModel]) el.addEventListener("change", saveSettings);
+loadSettings();
+
+// ---- image selection ----
+dropzone.addEventListener("click", () => fileInput.click());
+dropzone.addEventListener("dragover", e => { e.preventDefault(); dropzone.classList.add("dragover"); });
+dropzone.addEventListener("dragleave", () => dropzone.classList.remove("dragover"));
+dropzone.addEventListener("drop", e => {
+  e.preventDefault();
+  dropzone.classList.remove("dragover");
+  if (e.dataTransfer.files.length) setFile(e.dataTransfer.files[0]);
+});
+fileInput.addEventListener("change", () => {
+  if (fileInput.files.length) setFile(fileInput.files[0]);
+});
+
+function setFile(file) {
+  const okTypes = ["image/jpeg", "image/png", "image/webp"];
+  if (!okTypes.includes(file.type)) { showStatus("Please choose a JPEG, PNG, or WebP image.", true); return; }
+  if (file.size > 10 * 1024 * 1024) { showStatus("Image must be under 10 MB.", true); return; }
+  selectedFile = file;
+  preview.src = URL.createObjectURL(file);
+  preview.hidden = false;
+  placeholder.hidden = true;
+  goBtn.disabled = false;
+  hideStatus();
+}
+
+function showStatus(msg, isError, spinning) {
+  statusEl.style.display = "block";
+  statusEl.className = "status" + (isError ? " error" : "");
+  statusEl.innerHTML = (spinning ? '<span class="spinner"></span>' : "") + escapeHtml(msg);
+}
+function hideStatus() { statusEl.style.display = "none"; }
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c =>
+    ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+
+// Downscale to max 1024px and re-encode as JPEG so API payloads stay small.
+function imageToDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      const maxSide = 1024;
+      const scale = Math.min(1, maxSide / Math.max(img.width, img.height));
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.round(img.width * scale);
+      canvas.height = Math.round(img.height * scale);
+      canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
+      URL.revokeObjectURL(img.src);
+      resolve(canvas.toDataURL("image/jpeg", 0.85));
+    };
+    img.onerror = () => reject(new Error("Could not read the image."));
+    img.src = URL.createObjectURL(file);
+  });
+}
+
+function buildUserPrompt() {
+  const parts = ["Here is a photo of my empty space. Please advise me on decorating it."];
+  const roomType = document.getElementById("room_type").value;
+  const style = document.getElementById("style").value;
+  const budget = document.getElementById("budget").value;
+  const notes = document.getElementById("notes").value.trim().slice(0, 2000);
+  if (roomType) parts.push(`Intended use of the space: ${roomType}.`);
+  if (style) parts.push(`Preferred style: ${style}.`);
+  if (budget) parts.push(`Budget level: ${budget}.`);
+  if (notes) parts.push(`Additional notes: ${notes}`);
+  return parts.join(" ");
+}
+
+function systemPrompt() {
+  const language = lang() === "Español" ? "Spanish" : "English";
+  return SYSTEM_PROMPT.replace("{language}", language);
+}
+
+function extractJson(text) {
+  const cleaned = text.trim().replace(/^```(?:json)?\s*|\s*```$/g, "");
+  const start = cleaned.indexOf("{");
+  const end = cleaned.lastIndexOf("}");
+  if (start === -1 || end <= start) throw new Error("The model did not return JSON. Try again.");
+  return JSON.parse(cleaned.slice(start, end + 1));
+}
+
+// ---- providers ----
+async function askHuggingFace(dataUrl) {
+  const token = hfToken.value.trim();
+  if (!token) throw new Error("Enter your Hugging Face token in the AI provider settings (free at huggingface.co/settings/tokens).");
+  const resp = await fetch(HF_URL, {
+    method: "POST",
+    headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
+    body: JSON.stringify({
+      model: HF_MODEL,
+      max_tokens: 2048,
+      messages: [
+        { role: "system", content: systemPrompt() },
+        { role: "user", content: [
+            { type: "text", text: buildUserPrompt() },
+            { type: "image_url", image_url: { url: dataUrl } },
+        ]},
+      ],
+    }),
+  });
+  if (!resp.ok) {
+    const body = await resp.text();
+    throw new Error(`Hugging Face error ${resp.status}: ${body.slice(0, 300)}`);
+  }
+  return (await resp.json()).choices[0].message.content;
+}
+
+async function askOllama(dataUrl) {
+  const base = (ollamaUrl.value.trim() || "http://localhost:11434").replace(/\/+$/, "");
+  let resp;
+  try {
+    resp = await fetch(`${base}/api/chat`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: ollamaModel.value.trim() || "qwen2.5vl",
+        stream: false,
+        format: "json",
+        messages: [
+          { role: "system", content: systemPrompt() },
+          { role: "user", content: buildUserPrompt(),
+            images: [dataUrl.split(",")[1]] },
+        ],
+      }),
+    });
+  } catch (err) {
+    throw new Error(`Could not reach Ollama at ${base}. Make sure it is running with ` +
+      `OLLAMA_ORIGINS="https://*.github.io" and the model is pulled. (${err.message})`);
+  }
+  if (!resp.ok) {
+    const body = await resp.text();
+    throw new Error(`Ollama error ${resp.status}: ${body.slice(0, 300)}`);
+  }
+  return (await resp.json()).message.content;
+}
+
+function mockAdvice() {
+  const es = lang() === "Español";
+  return {
+    summary: es
+      ? "Espacio luminoso con buen potencial. Un estilo cálido y minimalista aprovechará la luz natural."
+      : "A bright space with great potential. A warm, minimal style will make the most of the natural light.",
+    style: es ? "Japandi (mezcla escandinava-japonesa)" : "Japandi",
+    color_palette: [
+      { name: es ? "Blanco hueso" : "Warm white", hex: "#F5F1E8", usage: es ? "Paredes" : "Walls" },
+      { name: es ? "Verde salvia" : "Sage green", hex: "#9CAF88", usage: es ? "Pared de acento" : "Accent wall" },
+      { name: es ? "Roble claro" : "Light oak", hex: "#C8A97E", usage: es ? "Muebles" : "Furniture" },
+      { name: es ? "Carbón" : "Charcoal", hex: "#3B3B3B", usage: es ? "Detalles" : "Accents" },
+    ],
+    furniture: [
+      { item: es ? "Sofá modular" : "Modular sofa",
+        description: es ? "Lino natural, 3 plazas" : "Natural linen, 3-seater",
+        placement: es ? "Frente a la ventana" : "Facing the window" },
+      { item: es ? "Mesa de centro" : "Coffee table",
+        description: es ? "Madera de roble, baja" : "Low oak wood",
+        placement: es ? "Centro de la sala" : "Center of the room" },
+    ],
+    lighting: [es ? "Lámpara de pie de arco" : "Arc floor lamp",
+               es ? "Luces cálidas 2700K" : "Warm 2700K bulbs"],
+    decor: [es ? "Plantas de interior grandes" : "Large indoor plants",
+            es ? "Alfombra de yute" : "Jute rug"],
+    layout_tips: [es ? "Deja pasillos de al menos 80 cm" : "Keep walkways at least 80 cm wide"],
+    _mock: true,
+  };
+}
+
+// ---- main flow ----
+goBtn.addEventListener("click", async () => {
+  if (!selectedFile) return;
+  goBtn.disabled = true;
+  results.style.display = "none";
+  showStatus(HEADINGS[lang()].loading, false, true);
+
+  try {
+    let advice;
+    if (providerSel.value === "mock") {
+      advice = mockAdvice();
+    } else {
+      const dataUrl = await imageToDataUrl(selectedFile);
+      const raw = providerSel.value === "ollama"
+        ? await askOllama(dataUrl)
+        : await askHuggingFace(dataUrl);
+      advice = extractJson(raw);
+    }
+    renderAdvice(advice);
+    hideStatus();
+  } catch (err) {
+    showStatus(err.message, true);
+  } finally {
+    goBtn.disabled = false;
+  }
+});
+
+function renderAdvice(a) {
+  const h = HEADINGS[lang()];
+  document.getElementById("h-summary").textContent = h.summary;
+  document.getElementById("h-palette").textContent = h.palette;
+  document.getElementById("h-furniture").textContent = h.furniture;
+  document.getElementById("h-lighting").textContent = h.lighting;
+  document.getElementById("h-decor").textContent = h.decor;
+  document.getElementById("h-layout").textContent = h.layout;
+
+  document.getElementById("mock-note").hidden = !a._mock;
+  document.getElementById("summary").textContent = a.summary || "";
+  const tag = document.getElementById("style-tag");
+  tag.textContent = a.style || "";
+  tag.style.display = a.style ? "inline-block" : "none";
+
+  const palette = document.getElementById("palette");
+  palette.innerHTML = "";
+  (a.color_palette || []).forEach(c => {
+    const hex = /^#[0-9a-fA-F]{6}$/.test(c.hex || "") ? c.hex : "#cccccc";
+    const div = document.createElement("div");
+    div.className = "swatch";
+    div.innerHTML =
+      `<div class="chip" style="background:${hex}"></div>` +
+      `<div class="name">${escapeHtml(c.name || "")}</div>` +
+      `<div class="hex">${escapeHtml(hex)}</div>` +
+      `<div class="usage">${escapeHtml(c.usage || "")}</div>`;
+    palette.appendChild(div);
+  });
+
+  const furn = document.getElementById("furniture");
+  furn.innerHTML = "";
+  (a.furniture || []).forEach(f => {
+    const div = document.createElement("div");
+    div.className = "furniture-item";
+    div.innerHTML =
+      `<h3>${escapeHtml(f.item || "")}</h3>` +
+      `<p>${escapeHtml(f.description || "")}</p>` +
+      `<p class="placement">📍 ${escapeHtml(f.placement || "")}</p>`;
+    furn.appendChild(div);
+  });
+
+  for (const key of ["lighting", "decor", "layout_tips"]) {
+    const ul = document.getElementById(key);
+    ul.innerHTML = "";
+    (a[key] || []).forEach(item => {
+      const li = document.createElement("li");
+      li.textContent = typeof item === "string" ? item : JSON.stringify(item);
+      ul.appendChild(li);
+    });
+  }
+
+  results.style.display = "block";
+  results.scrollIntoView({ behavior: "smooth" });
+}
+</script>
+</body>
+</html>

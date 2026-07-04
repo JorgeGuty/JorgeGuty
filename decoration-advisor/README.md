@@ -4,6 +4,11 @@ Upload a photo of an empty (or nearly empty) space and get AI-powered interior
 decoration advice: a color palette with hex swatches, furniture suggestions
 (muebles) with placement, lighting, decor ideas, and layout tips.
 
+> 🌐 **Prefer no install?** A fully client-side version of this app lives in
+> [`/docs`](../docs) and deploys to GitHub Pages at
+> `https://jorgeguty.github.io/JorgeGuty/`. It calls the open models directly
+> from your browser (Hugging Face token or local Ollama).
+
 The AI runs entirely on **open models** — no proprietary APIs required:
 
 | Provider | Models | Cost |
