@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>FOG RUNNER — Real Life GTA Map</title>
+  <link rel="stylesheet" href="vendor/leaflet/leaflet.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="map"></div>
+  <canvas id="fog"></canvas>
+
+  <div id="hud">
+    <div id="logo">FOG<span>RUNNER</span></div>
+    <div id="stats">
+      <div class="stat"><span class="label">ZONES</span><span id="stat-zones">0</span></div>
+      <div class="stat"><span class="label">TRAVELED</span><span id="stat-distance">0 m</span></div>
+      <div class="stat"><span class="label">GPS</span><span id="stat-gps">OFF</span></div>
+    </div>
+  </div>
+
+  <div id="controls">
+    <button id="btn-locate" title="Start GPS tracking">▶ START</button>
+    <button id="btn-follow" title="Keep camera on player" class="active">🎯 FOLLOW</button>
+    <button id="btn-demo" title="Explore without GPS: click the map or use arrow keys">🕹 DEMO</button>
+    <button id="btn-reset" title="Cover the whole map again">🗑 RESET FOG</button>
+  </div>
+
+  <div id="toast"></div>
+
+  <script src="vendor/leaflet/leaflet.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
