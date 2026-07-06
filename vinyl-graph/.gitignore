@@ -1,0 +1,7 @@
+node_modules/
+.next/
+.tmp/
+.env*
+public/covers/gen/
+*.tsbuildinfo
+next-env.d.ts
