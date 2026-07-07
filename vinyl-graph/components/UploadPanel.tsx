@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import type { JobStatus } from '@/lib/types';
+import { IS_STATIC } from '@/lib/runtime';
 
 const STAGE_LABELS: Record<JobStatus['stage'], string> = {
   subiendo: 'Subiendo video',
@@ -15,6 +16,29 @@ const STAGE_LABELS: Record<JobStatus['stage'], string> = {
 };
 
 export default function UploadPanel({ onDone }: { onDone: () => void }) {
+  if (IS_STATIC) {
+    return (
+      <div className="upload-card">
+        <h3 style={{ fontSize: 18 }}>Procesar un video de tu colección</h3>
+        <p className="hint">
+          Esta versión publicada en GitHub Pages es estática: no tiene servidor, así que
+          el pipeline de procesamiento (ffmpeg + Claude API) no está disponible aquí.
+          Para procesar un video nuevo, cloná el repo y corré el app localmente:
+        </p>
+        <pre className="hint" style={{ whiteSpace: 'pre-wrap' }}>
+          {'cd vinyl-graph\nnpm install\nexport ANTHROPIC_API_KEY=sk-ant-...\nnpm run dev'}
+        </pre>
+        <p className="hint">
+          Las ediciones que hagas al grafo en esta versión (aristas, nodos) se guardan en
+          tu navegador (localStorage) y podés bajarlas con «Exportar JSON».
+        </p>
+      </div>
+    );
+  }
+  return <UploadPanelServer onDone={onDone} />;
+}
+
+function UploadPanelServer({ onDone }: { onDone: () => void }) {
   const [job, setJob] = useState<JobStatus | null>(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);

@@ -6,6 +6,7 @@ import DetailPanel from '@/components/DetailPanel';
 import EdgeEditor from '@/components/EdgeEditor';
 import UploadPanel from '@/components/UploadPanel';
 import { CLUSTERS, CLUSTER_COLORS, type Cluster, type VinylGraph } from '@/lib/types';
+import { BASE_PATH, IS_STATIC, LOCAL_STORAGE_KEY } from '@/lib/runtime';
 
 const GraphView = dynamic(() => import('@/components/GraphView'), { ssr: false });
 
@@ -23,6 +24,19 @@ export default function Home() {
   const [saving, setSaving] = useState(false);
 
   const loadGraph = useCallback(async () => {
+    if (IS_STATIC) {
+      // Static build (GitHub Pages): local edits win over the bundled seed.
+      const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
+      if (saved) {
+        try {
+          setGraph(JSON.parse(saved) as VinylGraph);
+          return;
+        } catch { /* corrupt entry — fall through to the seed */ }
+      }
+      const res = await fetch(`${BASE_PATH}/graph.json`);
+      setGraph((await res.json()) as VinylGraph);
+      return;
+    }
     const res = await fetch('/api/graph');
     const g = (await res.json()) as VinylGraph;
     setGraph(g);
@@ -32,6 +46,10 @@ export default function Home() {
 
   const persist = useCallback(async (g: VinylGraph) => {
     setGraph(g);
+    if (IS_STATIC) {
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(g));
+      return;
+    }
     setSaving(true);
     try {
       await fetch('/api/graph', {

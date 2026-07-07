@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { CLUSTER_COLORS, type DiscNode, type InfluenceEdge, type VinylGraph } from '@/lib/types';
+import { asset } from '@/lib/runtime';
 
 interface Props {
   graph: VinylGraph;
@@ -91,7 +92,7 @@ export default function DetailPanel({ graph, selectedId, onChange, onSelect }: P
       <div className="node-head">
         {node.imagen_portada ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={node.imagen_portada} alt={node.album} />
+          <img src={asset(node.imagen_portada)} alt={node.album} />
         ) : null}
         <div>
           <h3>{node.album} {node.needs_review && <span className="warn" title="Revisar manualmente">⚠</span>}</h3>

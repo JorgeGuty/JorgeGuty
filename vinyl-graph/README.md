@@ -46,6 +46,31 @@ Abrí <http://localhost:3000>.
 - **Procesar video** — subí un mp4/mov; barra de progreso por etapas
   (frames → identificación → metadata → influencias). Al terminar reemplaza el grafo.
 
+## Deploy en GitHub Pages
+
+El repo incluye un workflow (`.github/workflows/deploy-pages.yml`) que publica una
+**versión estática** del app en GitHub Pages en cada push. Como Pages no tiene servidor:
+
+- El grafo se sirve desde `public/graph.json` (copia del semilla generada en el build).
+- Las ediciones (nodos/aristas) se guardan en **localStorage** del navegador y se pueden
+  bajar con «Exportar JSON».
+- El pipeline de video (ffmpeg + Claude API) **no** está disponible en Pages — para
+  procesar videos nuevos hay que correr el app localmente (`npm run dev`).
+
+Setup (una sola vez): en el repo, **Settings → Pages → Source: GitHub Actions**
+(el workflow intenta habilitarlo solo vía `configure-pages`). La URL queda en
+`https://<usuario>.github.io/<repo>/`.
+
+Para probar la build estática localmente:
+
+```bash
+mv app/api /tmp/api-backup
+cp data/graph.json public/graph.json
+STATIC_EXPORT=1 NEXT_PUBLIC_STATIC=1 npm run build   # genera out/
+mv /tmp/api-backup app/api
+npx serve out
+```
+
 ## Modelo de datos
 
 ```ts

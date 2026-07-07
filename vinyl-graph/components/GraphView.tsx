@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import type { ForceGraphMethods, NodeObject, LinkObject } from 'react-force-graph-2d';
 import { CLUSTERS, CLUSTER_COLORS, type Cluster, type DiscNode, type InfluenceEdge, type VinylGraph } from '@/lib/types';
+import { asset } from '@/lib/runtime';
 
 const ForceGraph2D = dynamic(() => import('react-force-graph-2d'), { ssr: false });
 
@@ -40,7 +41,7 @@ export default function GraphView({ graph, visibleClusters, decadeRange, onSelec
     for (const n of graph.nodes) {
       if (n.imagen_portada && !imagesRef.current.has(n.id)) {
         const img = new Image();
-        img.src = n.imagen_portada;
+        img.src = asset(n.imagen_portada);
         imagesRef.current.set(n.id, img);
       }
     }
