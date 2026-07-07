@@ -6,3 +6,4 @@ public/covers/gen/
 public/graph.json
 *.tsbuildinfo
 next-env.d.ts
+out/
